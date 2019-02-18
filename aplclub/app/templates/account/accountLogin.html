@@ -1,0 +1,41 @@
+{% extends 'account/header.html' %}
+{% block content %}
+<center>
+<form class="form-horizontal" action="/account/login/" method=post>
+  {% if erm %}
+ <div class="alert alert-danger">
+   <strong>{{ erm }}</strong>
+ </div>
+ {% endif %}
+
+  <div class="form-group">
+     <label class="control-label col-sm-2" for="email">Email:</label>
+     <div class="col-sm-10">
+       <input type="text" class="form-control" id="email" name="email">
+     </div>
+   </div>
+   <div class="form-group">
+     <label class="control-label col-sm-2" for="pwd">Password:</label>
+     <div class="col-sm-10">
+       <input type="text" class="form-control" id="pwd"  name="pass">
+     </div>
+   </div>
+   <div class="form-group">
+     <div class="col-sm-offset-2 col-sm-10">
+       <button type="submit" class="btn btn-default">Login</button><font color=black> or <a href="/account/new"><button type="button" class="btn btn-success">Register</button></a></font>
+     </div>
+   </div>
+  </form>
+</center>
+<style>
+.container {
+  margin-top: 18%;
+  width:30%;
+}
+</style>
+
+
+
+
+
+{% endblock %}

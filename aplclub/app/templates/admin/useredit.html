@@ -1,0 +1,45 @@
+{% extends 'admin/header.html' %}
+{% block content %}
+<h4>Edit user's information:</h4>
+{% if mess %}
+<div class="alert alert-success">
+<strong>{{ mess }}</strong>
+</div>
+    {% endif %}
+
+<form action="/admin/useredit/id={{ user.id }}" method=post>
+<table class="table table-hover">
+  <tbody>
+    <tr><td>ID</td><td><input type=text name=id value="{{ user.id }}"></td></tr>
+    <tr><td>Name</td><td><input type=text name=name value="{{ user.name }}"></td></tr>
+    <tr><td>Surname</td><td><input type=text name=surname value="{{ user.surname }}"></td></tr>
+    <tr><td>Status</td><td>
+      <select  id="statusList" name="status">
+          <option  value=6>Not verified</option>
+          <option  value=2>Passive</option>
+          <option  value=3>Active</option>
+          <option  value=4>VIP</option>
+          <option  value=5>Representative</option>
+          <option  value=1>Admin</option>
+         </select>
+    </td></tr>
+    <tr><td>Email</td><td><input type=text name=email value="{{ user.email }}"></td></tr>
+    <tr><td>Phone</td><td><input type=text name=phone value="{{ user.phone }}"></td></tr>
+    <tr><td>Company</td><td><input type=text name=company value="{{ user.company }}"></td></tr>
+    <tr><td>Fly type</td><td><input type=text name=flytype value="{{ user.flytype }}"></td></tr>
+    <tr><td>Rating</td><td><input type=text name=rating value="{{ user.rating }}"></td></tr>
+    <tr><td>Password</td><td><input type=text name=password value="{{ user.password }}"></td></tr>
+    <tr><td>Balance</td><td><input type=text name=balance value="{{ user.balance }}"></td></tr>
+    <tr><td>Regdate</td><td><input type=text name=regdate value="{{ user.regdate }}"></td></tr>
+{% if inviter %}
+    <tr><td>Invited by </td><td><a href=/admin/useredit/id={{ inviter.id }}>{{ inviter.name}} {{ inviter.surname }} </a></td></tr>
+{% endif %}
+
+    <tr><td></td><td><input type=submit class="btn btn-success" value="Save"></td></tr>
+    </tbody>
+    <script>
+      var st = {{ user.status }}
+      var list = document.getElementById('statusList');
+      list.value = st;
+      </script>
+{% endblock %}

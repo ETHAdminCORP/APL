@@ -1,0 +1,303 @@
+
+{% extends 'account/header.html' %}
+{% block content %}
+<h3>Hello, {{ name }}!</h3>
+<div class="panel panel-default">
+  <div class="panel-body-2" style="padding-left: 10px;">
+<h4>Balance: <span id="balanceAmount">{{ balance }}</span> APL
+{% if balance > 0 %}
+<button type="button" class="btn btn-primary btn-sm"   data-toggle="modal" data-target="#modelSendAPLCoin" >Send</button>
+{% endif %}
+
+
+
+</div>
+</div>
+
+
+ <div class="modal fade" id="modelEditBasicInfo" role="dialog">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title">Edit basic info</h4>
+       </div>
+       <div class="modal-body">
+         <div class="form-group">
+            <label for="flyTypeInput">Fly type:</label>
+            <input type="text" class="form-control" id="flyTypeInput"  value="{{ user.flytype }}">
+          </div>
+          <div class="form-group">
+             <label for="companyInput">Company:</label>
+             <input type="text" class="form-control" id="companyInput" name=companyInput value="{{ user.company }}">
+           </div>
+           <div class="form-group">
+              <label for="phoneInput">Phone:</label>
+              <input type="text" class="form-control" placeholder="+7... withot spaces" id="phoneInput" name=phoneInput value="{{ user.phone }}">
+            </div>
+            <div class="form-group">
+               <label for="emailInput">Email:</label>
+               <input type="text" class="form-control" id="emailInput" name=emailInput value="{{ user.email }}">
+             </div>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-success" id="saveBasicInfoButton">Save</button>
+         <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalEditBasicInformation">Close</button>
+       </div>
+     </div>
+   </div>
+ </div>
+
+
+
+
+ <div class="modal fade" id="modelQR" role="dialog">
+   <div class="modal-dialog">
+
+     <div class="modal-content">
+       <div id=modalQRBody class="modal-body">
+
+       </div>
+       <div class="modal-footer">
+         <button style="display:none;" type="button" class="btn btn-default" data-dismiss="modal" id="closeModalQR">Close</button>
+       </div>
+     </div>
+   </div>
+ </div>
+
+
+
+ <div class="modal fade" id="inviting" role="dialog">
+   <div class="modal-dialog">
+
+     <!-- Modal content-->
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title">Inviting new member</h4>
+       </div>
+        <div class="modal-body">
+          New member have to register via invite-link <span id="inviteLinkSpan"></span>
+          </div>
+       <div class="modal-footer">
+         <button style="display:none;" type="button" class="btn btn-default" data-dismiss="modal" id="closeModalQR">Close</button>
+       </div>
+     </div>
+   </div>
+ </div>
+
+
+
+
+ <div class="modal fade" id="modelSendAPLCoin" role="dialog">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal">&times;</button>
+         <h4 class="modal-title">Send APLCoin</h4>
+       </div>
+       <div class="modal-body">
+         <div class="form-group">
+            <label for="sendAPLPhoneNumberInput">Receiver phone number:</label>
+            <input type="text" placeholder="+7... without spaces"  class="form-control" id="sendAPLPhoneNumberInput" >
+            <span id="sendAPLCoinPersonName"></span><br>
+            <div id="sendAPLCoinAmountDIV" style="display:none">
+              <br><label for="sendAPLPhoneAmountInput">Amount:</label>
+              <input type="number" class="form-control" id="sendAPLPhoneAmountInput" placeholder="Max {{ user.balance }}">
+            </div>
+          </div>
+
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-success" id="sendAPLCoinButton" disabled>Send</button>
+         <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalEditBasicInformation">Close</button>
+       </div>
+     </div>
+   </div>
+ </div>
+
+
+
+
+
+<table border=0 width=100%>
+<tr><td width=90%>
+<b>Basic information: </b> <a href=# data-toggle="modal" data-target="#modelEditBasicInfo"><span id="editBasicInfoIcon" class="glyphicon glyphicon-pencil"></span></a><br>
+Status: {%- if user.status==1 -%} <span class="spnaStatus label label-danger">Admin</span> {%- endif %}
+{%- if user.status==2 -%} <span class="spnaStatus label label-info">Passive</span> {%- endif %}
+{%- if user.status==3 -%} <span class="spnaStatus label label-primary">Active</span> {%- endif %}
+{%- if user.status==4 -%} <span class="spnaStatus label label-success">VIP</span> {%- endif %}
+{%- if user.status==5 -%} <span class="spnaStatus label label-warning">Representative</span> {%- endif %}
+{%- if user.status==6 -%} <span class="spnaStatus label label-default">Not verified</span> {%- endif %}
+<br>
+Rating: {{ user.rating }}<br>
+Type: {{ user.flytype }} <input onchange="updatePrivacy();" id=toggleFlyType type="checkbox" data-toggle="toggle" data-on="Show" data-off="Hide" data-size="mini"><br>
+Company: {{ user.company }} <input onchange="updatePrivacy();" id=toggleCompany type="checkbox" data-toggle="toggle" data-on="Show" data-off="Hide" data-size="mini"><br>
+Phone: {{ user.phone }} <input onchange="updatePrivacy();" id=togglePhone type="checkbox" data-toggle="toggle" data-on="Show" data-off="Hide" data-size="mini"><br>
+Email: {{ user.email }} <input onchange="updatePrivacy();" id=toggleEmail type="checkbox" data-toggle="toggle" data-on="Show" data-off="Hide" data-size="mini"><br>
+
+<br>
+{% if user.status==5 or  user.status==1 %}
+<button type="button" class="btn btn-success" id="makeInviteCode">Invite new member</button>
+<button type="button" id="showModalInvite" data-toggle="modal" data-target="#inviting" class="btn btn-info">Show modal inviting</button>
+{% endif %}
+<a href="/account/logout"><button type="button" class="btn btn-info">Logout</button></a>
+
+
+</td><td><div id="qrcode" data-toggle="modal" data-target="#modelQR"></div></td></tr>
+</table>
+
+
+{% if user.showFlyType==True %}
+<script>$('#toggleFlyType').prop("checked", true);</script>
+{% endif %}
+{% if user.showCompany==True %}
+<script>$('#toggleCompany').prop("checked", true);</script>
+{% endif %}
+{% if user.showPhone==True %}
+<script>$('#togglePhone').prop("checked", true);</script>
+{% endif %}
+{% if user.showEmail==True %}
+<script>$('#toggleEmail').prop("checked", true);</script>
+{% endif %}
+<script>
+
+
+$('#makeInviteCode').click(function () {
+  $.post("/account/genInviteCode", function( data ) {
+    $('#inviteLinkSpan').html('<a href=https://elitepilots.club/account/new?invitecode=' + data + '</a>')
+    $('#showModalInvite').click()
+  })
+})
+
+
+$('#sendAPLCoinButton').click(function() {
+    $.post("/account/sendCoins", {phone: $('#sendAPLPhoneNumberInput').val(), amount: $('#sendAPLPhoneAmountInput').val()}, function( data ) {
+      if(data == 'smallBalance') {
+        alert('Not enough coins!')
+      }
+      else if(data == 'userNotFound') {
+        alert('Wrong phone number')
+      }
+      else if(data == 'ok') {
+        $('#closeModalEditBasicInformation').click();
+        window.location.reload(true);
+      }
+    })
+  })
+
+
+
+
+
+function updatePrivacy(){
+    $.post("/account/updatePrivacy", {showFlyType: $('#toggleFlyType').is(':checked'), showCompany: $('#toggleCompany').is(':checked'), showPhone: $('#togglePhone').is(':checked'), showEmail: $('#toggleEmail').is(':checked')});
+  }
+
+
+
+$('#sendAPLPhoneAmountInput').on('input', function() {
+    if($('#sendAPLPhoneAmountInput').val().length > 0 && parseFloat($('#sendAPLPhoneAmountInput').val()) <= {{ user.balance }}) {
+      $('#sendAPLCoinButton').removeAttr("disabled")
+    }
+    else {
+      $('#sendAPLCoinButton').attr("disabled", true)
+    }
+})
+
+
+
+$('#sendAPLPhoneNumberInput').on('input', function() {
+  var phoneInput = $('#sendAPLPhoneNumberInput').val()
+  phoneInput = phoneInput.replace(/\(/g,'')
+  phoneInput = phoneInput.replace(/\)/g,'')
+  phoneInput = phoneInput.replace(/\s/g,'')
+  phoneInput = phoneInput.replace(/\-/g,'')
+  $.post("/system/searchByPhone", {phone: phoneInput}, function( data ) {
+      if(data=='notFound') {
+        $('#sendAPLCoinPersonName').text('Receiver: not found');
+        $('#sendAPLCoinButton').attr("disabled", true)
+      }
+      else {
+        $('#sendAPLCoinPersonName').html('Receiver: <font color=green>' + data + '</font>');
+        $('#sendAPLCoinAmountDIV').show()
+
+      }
+  });
+
+
+})
+
+
+
+
+  $('#saveBasicInfoButton').click(function() {
+    var phoneInput = $('#phoneInput').val()
+    phoneInput = phoneInput.replace(/\(/g,'')
+    phoneInput = phoneInput.replace(/\)/g,'')
+    phoneInput = phoneInput.replace(/\s/g,'')
+    phoneInput = phoneInput.replace(/\-/g,'')
+    $.post("/account/updateBasicInfo", {flytype: $('#flyTypeInput').val(), company: $('#companyInput').val(), phone: phoneInput, email: $('#emailInput').val()}, function (data) {
+      if(data=='phoneExists') {
+        alert('Other member has this phone number!');
+      }
+      else {
+        $('#closeModalEditBasicInformation').click();
+        window.location.reload(true);
+      }
+    });
+  })
+
+$('#modalQRBody').click(function() {
+  $('#closeModalQR').click();
+})
+
+  var qrcode = new QRCode("qrcode", {
+      text: "http://localhost:5000/checkUser?id={{ user.id }}",
+      width: 128,
+      height: 128,
+      colorDark : "#000000",
+      colorLight : "#ffffff",
+      correctLevel : QRCode.CorrectLevel.H
+  });
+
+  var qrcodeBig = new QRCode("modalQRBody", {
+      text: "http://localhost:5000/checkUser?id={{ user.id }}",
+      width: 256,
+      height: 256,
+      colorDark : "#000000",
+      colorLight : "#ffffff",
+      correctLevel : QRCode.CorrectLevel.H
+  });
+  </script>
+<style>
+#editBasicInfo {
+  margin-left:10px;
+}
+
+  table {
+     border-spacing: 7px 11px;
+  }
+.container {
+  opacity: 1;
+  background: #ffffff;
+  margin-top:20px;
+}
+.equal-width-cols {
+  width: 100%;
+  table-layout: fixed;
+}
+.equal-width-cols td {
+  width: 100%;
+  text-align:center;
+  margin-left:10px;
+  margin-right:10px;
+}
+.tabText {
+  bacekground: #ddd;
+}
+.spnaStatus {
+  margin-left:10px;
+}
+</style>
+{% endblock %}

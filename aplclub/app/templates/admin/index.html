@@ -1,0 +1,12 @@
+{% extends 'admin/header.html' %}
+{% block content %}
+  <a href="users/"><button type="button" class="btn btn-info">Users</button></a>
+  <a href="meetups/"><button type="button" class="btn btn-info">Meetups</button></a>
+  <a href="verifyDocs/"><button type="button" class="btn btn-info">Documents</button></a>
+  <a href="logs/"><button type="button" class="btn btn-info">System log</button></a>
+  <hr>
+  <b>Statisctic:<br>
+  Users - {{ allusers }}<br>
+
+
+{% endblock %}

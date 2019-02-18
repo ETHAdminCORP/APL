@@ -1,0 +1,32 @@
+{% extends 'admin/header.html' %}
+{% block content %}
+
+
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th> </th>
+      </tr>
+    </thead>
+    <tbody>
+
+
+
+{% for user in users %}
+  <tr><td>{{ user.name }}</td><td>{{ user.surname }}</td><td>{{ user.email }}</td><td>
+    {%- if user.status==1 -%} <span class="label label-danger">Admin</span> {%- endif %}
+    {%- if user.status==2 -%} <span class="label label-info">Passive</span> {%- endif %}
+    {%- if user.status==3 -%} <span class="label label-primary">Active</span> {%- endif %}
+    {%- if user.status==4 -%} <span class="label label-success">VIP</span> {%- endif %}
+    {%- if user.status==5 -%} <span class="label label-warning">Representative</span> {%- endif %}
+    {%- if user.status==6 -%} <span class="label label-default">Not verified</span> {%- endif %}
+  </td><td><a href="/admin/useredit/id={{ user.id }}">
+    <button type="button" class="btn btn-warning btn-xs">Edit</button></a></td>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}
